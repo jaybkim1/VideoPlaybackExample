@@ -1,5 +1,7 @@
 package com.example.sonic.videoplaybackexample;
 
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,8 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private VideoView mVideoView;
     private MediaController mMediaController;
 
-    private ArrayList<Integer> mVideoResId;
+    private ArrayList<String> mVideoPath;
     private ArrayList<String> mVideoList;
+    private ArrayList<Bitmap> mVideoThumnails;
 
     private Uri mUri;
     private int mResourceID;
@@ -40,15 +43,8 @@ public class MainActivity extends AppCompatActivity {
         // Put all the names of video files and resource id to mVideoResId and mVideoList
         listVideosFromRawFolder();
 
-        // To see how many files there are in raw folder
-        for (int i = 0; i < mVideoList.size(); i++) {
-            Log.i(TAG,"mVideoResId:"+ mVideoResId);
-            Log.i(TAG,"mVideoList:"+ mVideoList);
-        }
-
-        // You can implement this sample project to have a dialogue to choose which one to play and convert that URI and pass it to setVideoURI()
-        mUri = Uri.parse("android.resource://" + getPackageName() + "/" + mVideoResId.get(0)); // android.resource://com.example.sonic.videoplaybackexample/2131099648(R.raw.sample)
-
+        // Create thumbnail from .mp4 that is stored in raw folder
+        createThumbnails();
 
         mVideoView = (VideoView) findViewById(R.id.videoView);
         mMediaController = new MediaController(this);
@@ -60,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void listVideosFromRawFolder() {
 
-        mVideoResId = new ArrayList<>();
+        mVideoPath = new ArrayList<>();
         mVideoList = new ArrayList<>();
 
         Field[] fields = R.raw.class.getFields();
@@ -73,9 +69,30 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            mVideoResId.add(mResourceID);
+            mVideoPath.add("android.resource://" + getPackageName() + "/"+mResourceID);
             mVideoList.add(mFileName);
 
         }
     }
+
+    private void createThumbnails(){
+
+        mVideoThumnails = new ArrayList<>();
+
+        // To see how many files there are in raw folder
+        for (int i = 0; i < mVideoList.size(); i++) {
+
+            Log.i(TAG,"mVideoPath:"+ mVideoPath);
+            Log.i(TAG,"mVideoList:"+ mVideoList);
+
+            // How to create a thumbnail (bitmap)
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+
+            mUri = Uri.parse(mVideoPath.get(i));
+            retriever.setDataSource(this, mUri);
+            Bitmap bitmap = retriever.getFrameAtTime(100000, MediaMetadataRetriever.OPTION_PREVIOUS_SYNC);
+            mVideoThumnails.add(bitmap);
+        }
+    }
+
 }
