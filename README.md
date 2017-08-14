@@ -1,7 +1,7 @@
 # VideoPlaybackExample
 This is just a sample project that demonstrates how to get a video file from res folder and play it by using VideoView.
 
-### How To Use
+## How To Use
 
  * Clone this project
 
@@ -9,7 +9,7 @@ This is just a sample project that demonstrates how to get a video file from res
 
  * Run it !
 
-### LICENSE
+## LICENSE
 ```
 The MIT License (MIT)
 
