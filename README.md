@@ -1,6 +1,8 @@
 # VideoPlaybackExample
 This is just a sample project that demonstrates how to get a video file from res folder and play it by using VideoView.
 
+UPDATED: A method is added, which has a function of creating a thumbnail for .mp4 file.
+
 ## How To Use
 
  * Clone this project
